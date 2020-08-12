@@ -1,5 +1,5 @@
 import re
-from crawler.youtube_helpers import remove_overlapping_subtitles, \
+from youtube_helpers import remove_overlapping_subtitles, \
     normalize_subtitle, leave_alphanum_characters, merge_subtitles, _get_transcript_google_web_asr
 import random
 from Levenshtein import ratio
@@ -157,7 +157,7 @@ class GoogleRandomSubsetWERFilter(BaseFilter):
         return input
 
 if __name__ == "__main__":
-    from crawler.youtube_helpers import load_all_subtitles
+    from youtube_helpers import load_all_subtitles
     subtitles = load_all_subtitles("./../video/2oNoBDMGGioHow_to_Make_a_Picnic_Table_-_Plans_and_Instructions.en.vtt")
     print(len(subtitles))
     input = {
