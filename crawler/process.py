@@ -34,12 +34,11 @@ pipeline = Pipeline([
 if __name__ == "__main__":
     video_file = sys.argv[1]
     target_dir = sys.argv[2]
-    print('Arquivo de vídeo: ', video_file)
-    print('Diretório de saída: ', target_dir)
+    print('Arquivo sendo processado: ', video_file)
 
     ext = "wav"
 
-    subtitle_file = video_file.replace(f'.{ext}', '.en.vtt')
+    subtitle_file = video_file.replace(f'.{ext}', '.pt.vtt')
     # info_file = video_file.replace(f'.{ext}', '.info.json')
     # overall_info = {"sub_file" : subtitle_file, "info" : info_file}
     # log_file = open("./log.json", "a+")

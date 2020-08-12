@@ -17,6 +17,7 @@ import unicodedata
 import speech_recognition as sr
 from Levenshtein import *
 from tqdm import tqdm
+from num2words import num2words
 
 everything_cool = re.compile(r"^[A-Za-z0-9\,\.\-\?\"\'\’\!\“\s\;\:\“\”\–\‘\’\’\/\\]+$", re.IGNORECASE)
 leave_chars = re.compile(r"[^a-z\s\']", re.IGNORECASE)
@@ -33,7 +34,7 @@ YT_PREFIX = "YTgenerated___"
 
 def get_all_subtitles(dir):
     # entries = os.listdir(dir)
-    for filename in Path(dir).walkfiles("*.en.vtt"):
+    for filename in Path(dir).walkfiles("*.pt.vtt"):
         # if filename.find(".vtt") != -1:
         if filename.find(YT_PREFIX) != -1:
             continue
@@ -89,12 +90,12 @@ def load_all_subtitles(subtitle_file):
 
 
 def get_video_file(subtitle_file):
-    naive_video_file = subtitle_file.replace(".en.vtt", ".mp4")
-    webm_video_file = subtitle_file.replace(".en.vtt", ".webm")
+    naive_video_file = subtitle_file.replace(".pt.vtt", ".mp4")
+    webm_video_file = subtitle_file.replace(".pt.vtt", ".webm")
     if os.path.exists(naive_video_file) or os.path.exists(webm_video_file):
         return naive_video_file
     else:
-        dumb_youtube_file = subtitle_file.replace(".en.vtt", "")
+        dumb_youtube_file = subtitle_file.replace(".pt.vtt", "")
         if os.path.exists(dumb_youtube_file):
             print("Renaming file {} --> {}".format(dumb_youtube_file, naive_video_file))
             shutil.move(dumb_youtube_file, naive_video_file)
@@ -167,33 +168,9 @@ def filter_too_close_subtitles(subtitles, min_threshold=1.5):
 
 
 def int_to_en(num):
-    d = {0: 'zero', 1: 'one', 2: 'two', 3: 'three', 4: 'four', 5: 'five',
-         6: 'six', 7: 'seven', 8: 'eight', 9: 'nine', 10: 'ten',
-         11: 'eleven', 12: 'twelve', 13: 'thirteen', 14: 'fourteen',
-         15: 'fifteen', 16: 'sixteen', 17: 'seventeen', 18: 'eighteen',
-         19: 'nineteen', 20: 'twenty',
-         30: 'thirty', 40: 'forty', 50: 'fifty', 60: 'sixty',
-         70: 'seventy', 80: 'eighty', 90: 'ninety'}
-    k = 1000
-    m = k * 1000
-    b = m * 1000
-    t = b * 1000
-
     assert (0 <= num)
 
-    if (num < 20):
-        return d[num]
-
-    if (num < 100):
-        if num % 10 == 0:
-            return d[num]
-        else:
-            return d[num // 10 * 10] + ' ' + d[num % 10]
-    if (num < k):
-        if num % 100 == 0:
-            return d[num // 100] + ' hundred'
-        else:
-            return d[num // 100] + ' hundred and ' + int_to_en(num % 100)
+    return num2words(num, lang='pt_BR')
 
 
 def normalize_numbers(input_str):
@@ -310,7 +287,7 @@ def _get_transcript_google_web_asr(t):
             with sr.AudioFile(f.name) as source:
                 audio = r.record(source)
 
-                return r.recognize_google(audio)
+                return r.recognize_google(audio, language='pt-BR')
     except Exception as e:
         print(e)
         return None
